@@ -58,9 +58,9 @@ class Normal implements  Runnable
 
 
 
-            reverse r=new Reverse();
+            Reverse r=new Reverse();
 
-              normal n=new normal();
+              Normal n=new Normal();
 
             Thread t1=new Thread(n);
 
