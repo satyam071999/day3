@@ -1,0 +1,101 @@
+package example_threading;
+class Even implements Runnable
+{
+	SyncPrint syn;
+	public  Even(SyncPrint syn)
+	{
+		this.syn=syn;
+	}
+	public void run()
+	{
+		
+		try {
+			for(int i=0;i<=100;)
+			{
+			     syn.even(i);
+			i+=2;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+class Odd implements Runnable
+{
+	SyncPrint syn;
+	public  Odd(SyncPrint syn)
+	{
+		this.syn=syn;
+	}
+	public void run()
+	{
+		int i=0;
+		try {
+			while(i<=100)
+			{
+			i=syn.odd();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+ class SyncPrint
+{
+	boolean isprint=false;
+	int i;
+	public synchronized int odd() throws Exception
+	{
+		if(!isprint)
+		{
+			wait();
+		}
+			if(i<=100)
+			{
+			
+				System.out.println("Odd  "+i);
+			}
+			Thread.sleep(2000);
+		
+		isprint=false;
+		notify();
+		return i;
+	}
+	public synchronized void even(int i) throws Exception
+	{
+		if(isprint)
+		{
+			wait();
+		}
+		if(i<=100)
+		{
+			System.out.println("Even  "+i);
+			this.i=i+1;
+		}
+		Thread.sleep(2000);
+		isprint=true;
+		notify();
+		}
+	
+}
+
+public class Threadingnotify {
+
+	public static void main(String[] args) throws InterruptedException {
+		SyncPrint syn=new SyncPrint();
+		Even n=new Even(syn);
+		Odd r=new Odd(syn);
+		Thread t1 =new Thread(n);
+		Thread t2 =new Thread(r);
+		t1.start();
+		Thread.sleep(5000);
+		t2.start();
+		
+
+	}
+
+}
