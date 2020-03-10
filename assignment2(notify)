@@ -1,0 +1,122 @@
+package example_threading;
+class Normal implements Runnable
+{
+	SyncPrint syn;
+	public  Normal(SyncPrint syn)
+	{
+		this.syn=syn;
+	}
+	public void run()
+	{
+		
+		try {
+			syn.normal();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+class Reverse implements Runnable
+{
+	SyncPrint syn;
+	public  Reverse(SyncPrint syn)
+	{
+		this.syn=syn;
+	}
+	public void run()
+	{
+		
+		try {
+			syn.reverse();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+ class SyncPrint
+{
+	boolean isprint=false;
+	public synchronized void reverse() throws Exception
+	{
+		if(!isprint)
+		{
+			wait();
+		}
+			for (int i= 5; i>= 1; i--)
+
+	        {
+
+	            for (int j=5; j>i;j--)
+
+	            {
+
+	                System.out.print(" ");
+
+	            }
+
+	            for (int k=1;k<=i;k++)
+
+	            {
+
+	                System.out.print("*");
+
+	            }
+
+	            System.out.println("");
+
+	        }
+			Thread.sleep(2000);
+		
+		isprint=false;
+		notify();
+	}
+	public synchronized void normal() throws Exception
+	{
+		if(isprint)
+		{
+			wait();
+		}
+		for(int i=0;i<5;i++) {
+
+            System.out.print(" ") ;
+
+
+
+            for (int j = 0; j <=i; j++) {
+
+                System.out.print("* ") ;
+
+            }
+
+
+
+            System.out.println();
+
+        }
+		isprint=true;
+		notify();
+		}
+	
+}
+
+public class Threadingnotify {
+
+	public static void main(String[] args) throws InterruptedException {
+		SyncPrint syn=new SyncPrint();
+		Normal n=new Normal(syn);
+		Reverse r=new Reverse(syn);
+		Thread t1 =new Thread(n);
+		Thread t2 =new Thread(r);
+		t1.start();
+		Thread.sleep(2000);
+		t2.start();
+		
+
+	}
+
+}
